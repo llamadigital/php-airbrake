@@ -32,6 +32,7 @@ class Configuration extends Record
     protected $_host = 'api.airbrake.io';
     protected $_resource = '/notifier_api/v2/notices';
     protected $_apiEndPoint;
+    protected $_errorReportingLevel;
 
     protected $_parameterFilters = array();
 
@@ -73,7 +74,11 @@ class Configuration extends Record
         }
 
         if (!$this->url) {
-            $this->url = isset($this->serverData['REDIRECT_URL']) ? $this->serverData['REDIRECT_URL'] : $this->serverData['SCRIPT_NAME'];
+            if (isset($this->serverData['REDIRECT_URL'])) {
+                $this->url = $this->serverData['REDIRECT_URL'];
+            } elseif (isset($this->serverData['SCRIPT_NAME'])) {
+                $this->url = $this->serverData['SCRIPT_NAME'];
+            }
         }
 
         if (!$this->hostname) {
